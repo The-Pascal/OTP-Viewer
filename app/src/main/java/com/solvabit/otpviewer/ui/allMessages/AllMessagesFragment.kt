@@ -1,17 +1,20 @@
 package com.solvabit.otpviewer.ui.allMessages
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.solvabit.otpviewer.R
+import com.google.android.material.snackbar.Snackbar
 import com.solvabit.otpviewer.databinding.FragmentAllMessagesBinding
+
 
 class AllMessagesFragment : Fragment() {
 
@@ -30,16 +33,20 @@ class AllMessagesFragment : Fragment() {
     ): View? {
         binding = FragmentAllMessagesBinding.inflate(inflater)
 
-        val messagesViewModelFactory = AllMessagesViewModelFactory(args.messages.toList(), requireContext())
-        viewModel = ViewModelProvider(this, messagesViewModelFactory)[AllMessagesViewModel::class.java]
+        val messagesViewModelFactory =
+            AllMessagesViewModelFactory(args.messages.toList(), requireContext())
+        viewModel =
+            ViewModelProvider(this, messagesViewModelFactory)[AllMessagesViewModel::class.java]
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        binding.allMessagesRecyclerView.adapter = AllMessagesAdapter(MessagesListener {
-//            this.findNavController().navigate(
-////                AllMessa.actionMessagesFragmentToMessageDetailsFragment(it)
-//            )
-            Toast.makeText(context, "clicked on - ${it.address}", Toast.LENGTH_SHORT).show()
+        binding.allMessagesRecyclerView.adapter = AllMessagesAdapter(OTPClickListener {
+            val clipboard: ClipboardManager =
+                activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText("label", it.otp.otpCode.toString())
+            clipboard.setPrimaryClip(clip)
+            Snackbar.make(binding.root, "Code copied - ${it.otp.otpCode}", Snackbar.LENGTH_SHORT)
+                .show()
         })
 
         binding.allMessagesBackButton.setOnClickListener {

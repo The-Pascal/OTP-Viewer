@@ -49,7 +49,9 @@ class HomeViewModel(private val context: Context, private val cursor: Cursor) : 
             mutableMsgList.add(msg)
         }
         _allMessages.value = mutableMsgList
-        _msgList.value = mutableMsgList
+        _msgList.value = mutableMsgList.distinctBy {
+            it.address
+        }
         cursor.close()
     }
 
@@ -57,6 +59,15 @@ class HomeViewModel(private val context: Context, private val cursor: Cursor) : 
         return _allMessages.value?.filter {
             it.address == address
         }?.toTypedArray() ?: arrayOf()
+    }
+
+    fun searchQuery(query: String) {
+        val copyList = _allMessages.value
+        _msgList.value = copyList?.filter {
+            it.address.contains(query, true) or it.body.contains(query, true)
+        }
+        if(query.isEmpty())
+            _msgList.value = _allMessages.value?.distinctBy { it.address }
     }
 
 }

@@ -24,7 +24,8 @@ class AllMessagesViewModel(private val messages: List<Message>, private var requ
     }
 
     private fun checkForOTP() {
-        messages.forEach {
+        val tempMessages = messages.reversed()
+        tempMessages.forEach {
             when (val otpCode = findOTPCode(it)) {
                 "NA" -> Log.i(TAG, "checkForOTP: No otp available")
                 else -> {
@@ -33,7 +34,7 @@ class AllMessagesViewModel(private val messages: List<Message>, private var requ
                 }
             }
         }
-        _messagesList.value = messages
+        _messagesList.value = tempMessages
     }
 
 }

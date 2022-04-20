@@ -7,7 +7,7 @@
         <import type="android.view.View"/>
         <variable
             name="clickListener"
-            type="com.solvabit.otpviewer.ui.allMessages.MessagesListener" />
+            type="com.solvabit.otpviewer.ui.allMessages.OTPClickListener" />
         <variable
             name="message"
             type="com.solvabit.otpviewer.model.Message" />
@@ -17,7 +17,6 @@
         android:id="@+id/send_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> clickListener.onClick(message)}"
         android:orientation="vertical">
 
         <LinearLayout
@@ -54,6 +53,7 @@
                 android:visibility="@{message.otp.containsOTP == true ? View.VISIBLE : View.GONE}"
                 android:layout_marginTop="12dp"
                 android:textColor="@color/white"
+                android:onClick="@{() -> clickListener.onClick(message)}"
                 android:background="@drawable/copy_button_bg"
                 tools:text="COPY 674584"
                 android:text="@{@string/copy_otp_text(message.otp.otpCode)}"/>

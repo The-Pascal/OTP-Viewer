@@ -8,7 +8,7 @@ import com.solvabit.otpviewer.databinding.MessageCardBinding
 import com.solvabit.otpviewer.model.Message
 import com.solvabit.otpviewer.ui.home.HomeDiffCallback
 
-class AllMessagesAdapter(private val messagesListener: MessagesListener):
+class AllMessagesAdapter(private val OTPClickListener: OTPClickListener):
     ListAdapter<Message, AllMessagesAdapter.ViewHolder>(HomeDiffCallback()){
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -18,14 +18,14 @@ class AllMessagesAdapter(private val messagesListener: MessagesListener):
     }
 
     override fun onBindViewHolder(holder: AllMessagesAdapter.ViewHolder, position: Int) {
-        holder.bind(getItem(position), messagesListener)
+        holder.bind(getItem(position), OTPClickListener)
     }
 
     class ViewHolder private constructor(private val binding: MessageCardBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Message, messagesListener: MessagesListener) {
+        fun bind(item: Message, OTPClickListener: OTPClickListener) {
             binding.message = item
-            binding.clickListener = messagesListener
+            binding.clickListener = OTPClickListener
             binding.executePendingBindings()
         }
         companion object {
@@ -40,6 +40,6 @@ class AllMessagesAdapter(private val messagesListener: MessagesListener):
 
 }
 
-class MessagesListener(val clickListener: (message: Message) -> Unit) {
+class OTPClickListener(val clickListener: (message: Message) -> Unit) {
     fun onClick(message: Message) = clickListener(message)
 }

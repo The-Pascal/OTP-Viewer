@@ -1,5 +1,9 @@
 package com.solvabit.otpviewer.ui.home
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.provider.Telephony
 import android.view.*
@@ -42,21 +46,65 @@ class HomeFragment : Fragment() {
         binding.lifecycleOwner = this
 
         binding.senderRecyclerView.adapter = HomeAdapter(HomeAdapterListener {
-            this.findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToAllMessagesFragment(viewModel.getList(it.address)))
+            this.findNavController().navigate(
+                HomeFragmentDirections.actionHomeFragmentToAllMessagesFragment(
+                    viewModel.getList(it.address)
+                )
+            )
         })
+
+        createChannel(
+            getString(R.string.message_notification_channel_id),
+            getString(R.string.message_notification_channel_name)
+        )
 
         return binding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.search_filter_menu,menu)
+        inflater.inflate(R.menu.search_filter_menu, menu)
 
         val searchItem = menu.findItem(R.id.app_bar_search_message)
         val searchView = searchItem.actionView as SearchView
         initializeSearch(searchView)
     }
 
+    private fun createChannel(channelId: String, channelName: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_HIGH
+            )
+                .apply {
+                    setShowBadge(false)
+                }
+
+            notificationChannel.enableLights(true)
+            notificationChannel.lightColor = Color.RED
+            notificationChannel.enableVibration(true)
+            notificationChannel.description = "This gives notifications for OTP"
+
+            val notificationManager = requireActivity().getSystemService(
+                NotificationManager::class.java
+            )
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
+    }
+
     private fun initializeSearch(searchView: SearchView) {
-        // TODO: Implement search
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let {
+                    viewModel.searchQuery(newText)
+                }
+                return false
+            }
+
+        })
     }
 }
