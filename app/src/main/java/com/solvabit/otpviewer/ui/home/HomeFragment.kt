@@ -1,16 +1,21 @@
 package com.solvabit.otpviewer.ui.home
 
 import android.os.Bundle
+import android.provider.Telephony
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.solvabit.otpviewer.R
 import com.solvabit.otpviewer.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
+    private lateinit var viewModel: HomeViewModel
 
     override fun onResume() {
         super.onResume()
@@ -25,6 +30,21 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(inflater)
 
         setHasOptionsMenu(true)
+
+        val contentResolver = requireActivity().contentResolver
+        val cursor = contentResolver.query(
+            Telephony.Sms.CONTENT_URI,
+            null, null, null, null
+        )
+        val homeViewModelFactory = HomeViewModelFactory(requireContext(), cursor!!)
+        viewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+
+        binding.senderRecyclerView.adapter = HomeAdapter(HomeAdapterListener {
+//            this.findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToMessagesFragment(viewModel.getList(it.address)))
+            Toast.makeText(context, "Clicked on - ${it.address}", Toast.LENGTH_SHORT).show()
+        })
 
         return binding.root
     }

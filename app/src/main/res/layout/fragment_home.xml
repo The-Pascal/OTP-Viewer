@@ -4,7 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.solvabit.otpviewer.ui.home.HomeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,6 +27,21 @@
             app:titleTextAppearance="@style/Toolbar.TitleText"
             tools:menu="@menu/search_filter_menu"
             tools:title="Messages" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/sender_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:scrollbars="vertical"
+            app:bindAllSenders="@{viewModel.msgList}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/home_toolbar"
+            tools:listitem="@layout/sender_card" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
