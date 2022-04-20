@@ -42,8 +42,7 @@ class HomeFragment : Fragment() {
         binding.lifecycleOwner = this
 
         binding.senderRecyclerView.adapter = HomeAdapter(HomeAdapterListener {
-//            this.findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToMessagesFragment(viewModel.getList(it.address)))
-            Toast.makeText(context, "Clicked on - ${it.address}", Toast.LENGTH_SHORT).show()
+            this.findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToAllMessagesFragment(viewModel.getList(it.address)))
         })
 
         return binding.root

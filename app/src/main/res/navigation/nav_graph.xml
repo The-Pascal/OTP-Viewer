@@ -9,5 +9,18 @@
         android:id="@+id/homeFragment"
         android:name="com.solvabit.otpviewer.ui.home.HomeFragment"
         android:label="HomeFragment"
-        tools:layout="@layout/fragment_home"/>
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_allMessagesFragment"
+            app:destination="@id/allMessagesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/allMessagesFragment"
+        android:name="com.solvabit.otpviewer.ui.allMessages.AllMessagesFragment"
+        android:label="AllMessagesFragment"
+        tools:layout="@layout/fragment_all_messages">
+        <argument
+            android:name="messages"
+            app:argType="com.solvabit.otpviewer.model.Message[]" />
+    </fragment>
 </navigation>

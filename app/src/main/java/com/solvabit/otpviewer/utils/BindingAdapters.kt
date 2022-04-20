@@ -8,12 +8,22 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.solvabit.otpviewer.R
 import com.solvabit.otpviewer.model.Message
+import com.solvabit.otpviewer.ui.allMessages.AllMessagesAdapter
 import com.solvabit.otpviewer.ui.home.HomeAdapter
+import java.awt.font.NumericShaper
 import java.util.*
+
+private const val TAG = "BindingAdapters"
 
 @BindingAdapter("bindAllSenders")
 fun bindAllSenders(recyclerView: RecyclerView, data: List<Message>?) {
     val adapter = recyclerView.adapter as HomeAdapter
+    adapter.submitList(data)
+}
+
+@BindingAdapter("bindAllMessages")
+fun bindAllMessages(recyclerView: RecyclerView, data: List<Message>?) {
+    val adapter = recyclerView.adapter as AllMessagesAdapter
     adapter.submitList(data)
 }
 
@@ -26,8 +36,16 @@ fun bindSenderImage(imageView: ImageView, message: Message?) {
 }
 
 fun getColor(string: String): Int {
-    val rnd = Random()
-    return Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
+    Log.i(TAG, "getColor: $string")
+    val color = when(string[0].lowercaseChar()) {
+        in 'a' .. 'e' -> "#0583EB"
+        in 'e' .. 'm' -> "#34CAAD"
+        in 'm' .. 'r' -> "#E4420F"
+        in 'r' .. 'z' -> "#06BFD1"
+        in '0' .. '9' -> "#FE2F74"
+        else -> "#4F92AB"
+    }
+    return Color.parseColor(color)
 }
 
 @BindingAdapter("bindTextColor")

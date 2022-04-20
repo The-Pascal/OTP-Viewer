@@ -17,5 +17,12 @@ data class Message(
     var body: String = "",
     var serviceCenter: String? = "",
     var creator: Int = -1,
-    var type: Int = 0
+    var type: Int = 0,
+    var otp: OTP = OTP()
+): Parcelable
+
+@Parcelize
+data class OTP(
+    var containsOTP: Boolean = false,
+    var otpCode: Int = -1
 ): Parcelable

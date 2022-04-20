@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.solvabit.otpviewer.model.Message
+import com.solvabit.otpviewer.model.OTP
 import java.lang.IllegalArgumentException
 
 private const val TAG = "HomeViewModel"
@@ -44,13 +45,18 @@ class HomeViewModel(private val context: Context, private val cursor: Cursor) : 
                     cursor.getString(cursor.getColumnIndexOrThrow(Telephony.Sms.SERVICE_CENTER))
                 creator = -1
                 type = cursor.getInt(cursor.getColumnIndexOrThrow(Telephony.Sms.SUBSCRIPTION_ID))
-
             }
             mutableMsgList.add(msg)
         }
         _allMessages.value = mutableMsgList
         _msgList.value = mutableMsgList
         cursor.close()
+    }
+
+    fun getList(address: String): Array<Message> {
+        return _allMessages.value?.filter {
+            it.address == address
+        }?.toTypedArray() ?: arrayOf()
     }
 
 }
